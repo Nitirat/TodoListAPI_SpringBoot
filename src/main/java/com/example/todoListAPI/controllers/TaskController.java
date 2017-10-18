@@ -14,47 +14,61 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.todoListAPI.domain.ResponseDelete;
+import com.example.todoListAPI.domain.ResponseMessage;
 import com.example.todoListAPI.domain.Task;
-import com.example.todoListAPI.model.TaskModel;
+import com.example.todoListAPI.service.TaskService;
 
 @RestController
 public class TaskController {
 	
 	@Autowired
-	private TaskModel taskModel;
+	private TaskService taskService;
 	
 	@GetMapping({"/", "/tasks"})
 	public ResponseEntity<List<Task>> getAllTask() throws Exception {
-		return new ResponseEntity<List<Task>>(taskModel.getAllTask(), HttpStatus.OK);
+		return new ResponseEntity<List<Task>>(taskService.getAllTask(), HttpStatus.OK);
     }
 	
 	@GetMapping(value = "/tasks/{id}")
-	public ResponseEntity<Task> getTaskById(@PathVariable String id) throws Exception {		
-		return new ResponseEntity<Task>(taskModel.getTaskById(id), HttpStatus.OK);
+	public ResponseEntity<Task> getTaskById(@PathVariable String id) throws Exception {
+		Task task = taskService.getTaskById(id);
+		if (task == null){
+            throw new Exception("Task Not Found !!");
+        }
+		return new ResponseEntity<Task>(task, HttpStatus.OK);
     }
 	
 	@PostMapping(value = "/tasks")
-	public ResponseEntity<Task> saveTask(@RequestBody Task task) throws Exception {
-        return new ResponseEntity<Task>(taskModel.saveTask(task), HttpStatus.OK);
+	public ResponseEntity<Task> saveTask(@RequestBody Task task) throws Exception {		
+        return new ResponseEntity<Task>(taskService.saveTask(task), HttpStatus.OK);
     }
 	
 	@PatchMapping(value = "/tasks")
 	public ResponseEntity<Task> updateTask(@RequestBody Task task) throws Exception {
-        return new ResponseEntity<Task>(taskModel.updateTask(task), HttpStatus.OK);
+		Task taskValue = taskService.getTaskById(task.getId());
+        if (taskValue == null){
+            throw new Exception("Task Not Found !!");
+        }
+        return new ResponseEntity<Task>(taskService.updateTask(task), HttpStatus.OK);
     }
 	
 	@PutMapping(value = "/tasks/{id}")
-	public ResponseEntity<Task>  updateTaskPending(@PathVariable("id") String id) throws Exception {
-        return new ResponseEntity<Task>(taskModel.updateStatus(id), HttpStatus.OK);
+	public ResponseEntity<Task>  updateStatus(@PathVariable("id") String id) throws Exception {
+		Task task = taskService.getTaskById(id);
+        if (task == null){
+            throw new Exception("Task Not Found !!");
+        }
+        return new ResponseEntity<Task>(taskService.updateStatus(task), HttpStatus.OK);
     }
 	
 	@DeleteMapping(value = "/tasks/{id}")
-	public ResponseEntity<ResponseDelete> removeTaskById(@PathVariable String id) throws Exception  {
-		taskModel.removeTask(id);
-		return new ResponseEntity<ResponseDelete>(new ResponseDelete("Task Deleted !! "), HttpStatus.OK);
-    }
-	
-	
+	public ResponseEntity<ResponseMessage> removeTaskById(@PathVariable String id) throws Exception  {
+		Task task = taskService.getTaskById(id);
+		if (task == null){
+            throw new Exception("Task Not Found !!");
+        }
+		taskService.removeTask(task);
+		return new ResponseEntity<ResponseMessage>(new ResponseMessage("Task Deleted !! "), HttpStatus.OK);
+    }	
 
 }

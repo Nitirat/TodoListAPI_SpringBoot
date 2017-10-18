@@ -1,10 +1,10 @@
 package com.example.todoListAPI.domain;
 
-public class ResponseDelete {
+public class ResponseMessage {
 	
     private String message;
 
-    public ResponseDelete(String message) {
+    public ResponseMessage(String message) {
 		super();
 		this.message = message;
 	}

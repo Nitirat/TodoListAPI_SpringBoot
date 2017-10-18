@@ -11,7 +11,32 @@ public class Task {
 	
 	private String subject;
 	private String detail;
-	private String status = "Pending";
+	private boolean done = false;
+		
+	public Task() {
+		super();
+	}
+	
+	public Task(String subject, String detail) {
+		super();
+		this.subject = subject;
+		this.detail = detail;
+	}
+	
+	public Task(String subject, String detail, boolean done) {
+		super();
+		this.subject = subject;
+		this.detail = detail;
+		this.done = done;
+	}
+	
+	public Task(String id, String subject, String detail, boolean done) {
+		super();
+		this.id = id;
+		this.subject = subject;
+		this.detail = detail;
+		this.done = done;
+	}
 	
 	public String getId() {
 		return id;
@@ -31,11 +56,12 @@ public class Task {
 	public void setDetail(String detail) {
 		this.detail = detail;
 	}
-	public String getStatus() {
-		return status;
+	public boolean isDone() {
+		return done;
 	}
-	public void setStatus(String status) {
-		this.status = status;
+	public void setDone(boolean done) {
+		this.done = done;
 	}
+
 
 }
