@@ -62,7 +62,7 @@ public class TaskController {
     }
 	
 	@DeleteMapping(value = "/tasks/{id}")
-	public ResponseEntity<ResponseMessage> removeTaskById(@PathVariable String id) throws Exception  {
+	public ResponseEntity<ResponseMessage> removeTaskById(@PathVariable("id") String id) throws Exception  {
 		Task task = taskService.getTaskById(id);
 		if (task == null){
             throw new Exception("Task Not Found !!");
